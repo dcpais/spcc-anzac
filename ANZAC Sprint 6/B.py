@@ -8,21 +8,20 @@ for i in range(n):
     cities.append([int(x) for x in input().strip().split(" ")])
 
 # Construct graph
-edges = dict()
-for i, (top, down) in enumerate(cities[:-1]):
-    edges[i] = []
-    for j, (top1, down1) in enumerate(cities[i+1:]):
-        if top == top1 or down == down1:
+edges = dict([(i, []) for i in range(n)])
+for i, (top, bot) in enumerate(cities[:-1]):
+    for j, (top1, bot1) in enumerate(cities[i+1:], start = i + 1):
+        if top == top1 or bot == bot1:
             edges[i].append(j)
+            edges[j].append(i)
 
-
+# BFS search, considering steps.
 def doBFS(start, end, graph):
 
     frontier = [(start, 0)]
     visited = set()
     while frontier:
         current, step = frontier.pop(0)
-        print(f"current: {current}")
         
         if current == end:
             return step
@@ -34,6 +33,7 @@ def doBFS(start, end, graph):
 
     return -1
 
+# Iterate over all queries and output the degree of connection
 q = int(input())
 friendlies = []
 for i in range(q):
